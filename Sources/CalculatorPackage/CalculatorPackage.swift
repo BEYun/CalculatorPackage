@@ -22,7 +22,7 @@ public class CalculatorPackage<T: Inputable>: Calculable {
         get {
             switch inputBox.state {
             case .initial, .ready:
-                return inputBox.inputNum as? String ?? "0"
+                return inputBox.inputNum as? String ?? "error"
             case .calculating, .equaled:
                 let num = doubleResult.truncatingRemainder(dividingBy: 1.0) == 0 ? String(Int(doubleResult)) : String(doubleResult)
                 return num

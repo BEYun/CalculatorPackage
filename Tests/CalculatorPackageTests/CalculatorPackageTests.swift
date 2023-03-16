@@ -209,6 +209,7 @@ final class CalculatorPackageTests: XCTestCase {
         stringTest.inputBox.addNum("1")
         stringTest.inputBox.addNum("2")
         stringTest.inputBox.addNum("3")
+        print(stringTest.outputResult)
         stringTest.makeCalculation(.plus)
         stringTest.inputBox.addNum("4")
         stringTest.inputBox.addNum("5")

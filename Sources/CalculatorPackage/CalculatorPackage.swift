@@ -3,30 +3,20 @@ import Foundation
 
 
 public class CalculatorPackage<T: Inputable>: Calculable {
-
+    
     public var inputBox = T()
     
     var firstNum: Double = 0.0
     var secondNum: Double = 0.0
     var currentOp: OperationType = .none
-
+    
     var tempOperation: [Any] = []
     
-    var doubleResult: Double = 0.0 {
-        didSet {
-            doubleResult = round(doubleResult * 100000000) / 100000000
-        }
-    }
+    var doubleResult: Double = 0.0
     
     public var outputResult: String {
         get {
-            switch inputBox.state {
-            case .initial, .ready:
-                return inputBox.inputNum as? String ?? "error"
-            case .calculating, .equaled:
-                let num = doubleResult.truncatingRemainder(dividingBy: 1.0) == 0 ? String(Int(doubleResult)) : String(doubleResult)
-                return num
-            }
+            return getOutputResult()
         }
     }
     
@@ -193,13 +183,63 @@ extension CalculatorPackage {
             
         } catch CalculationError.dividedByZero {
             print("0으로 나눌 수 없습니다. result :", result)
+            result = Double.nan
+            return result
         } catch CalculationError.infiniteNumber {
             print("수의 범위를 벗어났습니다. result :", result)
+            result = Double.infinity
+            return result
         } catch CalculationError.maxFractionDigits {
             print("소수점 자리수를 초과했습니다. result :", result)
+            result = Double.nan
+            return result
         } catch {
             print("그 밖의 에러 :", error)
+            result = Double.nan
+            return result
         }
+        return result
+    }
+    
+    func getOutputResult() -> String {
+        switch inputBox.state {
+        case .initial, .ready:
+            let str = inputBox.inputNum as? String ?? "Error"
+            guard let num = Double(str) else { return "0"}
+            return makeFormatByRange(num: num)
+        case .calculating, .equaled:
+            return makeFormatByRange(num: doubleResult)
+        }
+    }
+    
+    func makeFormatByRange(num: Double) -> String {
+        let numberformatter = NumberFormatter()
+        numberformatter.maximumFractionDigits = 8
+        var result: String = "0"
+        
+        switch num {
+            
+        case .nMaxExponent ... .nMinExponent, .pMinExponent ... .pMaxExponent:
+            numberformatter.numberStyle = .decimal
+            guard let str = numberformatter.string(for: num) else { return "0"}
+            result = str
+            
+        default:
+            numberformatter.numberStyle = .scientific
+            numberformatter.maximumFractionDigits = 5
+            guard let str = numberformatter.string(for: num) else { return "0"}
+            result = str
+        }
+        
+        if result.count > 12 {
+            let idx = result.index(result.startIndex, offsetBy: 12)
+            if result[idx] == "." {
+                result = String(result[..<idx])
+            } else {
+                result = String(result[...idx])
+            }
+        }
+        
         return result
     }
     
@@ -211,7 +251,7 @@ extension CalculatorPackage {
     func makeAdd() throws -> Double {
         let result = firstNum + secondNum
         
-        guard result > Double.min && result < Double.max else {
+        guard result > Double.nMax && result < Double.pMax else {
             throw CalculationError.infiniteNumber
         }
         
@@ -221,7 +261,7 @@ extension CalculatorPackage {
     func makeSub() throws -> Double {
         let result = firstNum - secondNum
         
-        guard result > Double.min && result < Double.max else {
+        guard result > Double.nMax && result < Double.pMax else {
             throw CalculationError.infiniteNumber
         }
         
@@ -231,11 +271,11 @@ extension CalculatorPackage {
     func makeMul() throws -> Double {
         let result = firstNum * secondNum
         
-        guard result > Double.min && result < Double.max else {
+        guard result > Double.nMax && result < Double.pMax else {
             throw CalculationError.infiniteNumber
         }
         if result != 0.0 {
-            guard result < Double.nMaxFractionDigits || result > Double.pMaxFractionDigits else {
+            guard result < Double.nMaxFraction || result > Double.pMaxFraction else {
                 throw CalculationError.maxFractionDigits
             }
         }
@@ -249,32 +289,15 @@ extension CalculatorPackage {
         guard !result.isNaN else {
             throw CalculationError.dividedByZero
         }
-        guard result > Double.min && result < Double.max else {
+        guard result > Double.nMax && result < Double.pMax else {
             throw CalculationError.infiniteNumber
         }
         if result != 0.0 {
-            guard result < Double.nMaxFractionDigits || result > Double.pMaxFractionDigits else {
+            guard result < Double.nMaxFraction || result > Double.pMaxFraction else {
                 throw CalculationError.maxFractionDigits
             }
         }
         
         return result
     }
-}
-
-// MARK: Doubled Number & Decimal Range Constraint
-extension Double {
-    static var max: Double {
-        return 1.0e161
-    }
-    static var min: Double {
-        return -1.0e161
-    }
-    static var pMaxFractionDigits: Double {
-        return 1.0e-91
-    }
-    static var nMaxFractionDigits: Double {
-        return -1.0e-91
-    }
-
 }

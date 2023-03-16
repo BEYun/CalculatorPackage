@@ -81,6 +81,7 @@ extension CalculatorPackage {
         // case .equaled : 연산 완료 (두 번째 피연산자 입력 X)
         case .equaled:
             firstNum = doubleResult
+            secondNum = doubleResult
             currentOp = inputOp
             inputBox.state = .calculating
             
@@ -95,7 +96,7 @@ extension CalculatorPackage {
     public func makeEqual() {
         
         switch inputBox.state {
-        case .ready, .equaled:
+        case .ready:
             let num: Double = makeNumToDouble()
             firstNum = doubleResult
             secondNum = num
@@ -109,6 +110,10 @@ extension CalculatorPackage {
             doubleResult = operateByOpType(op: currentOp)
             
             inputBox.state = .equaled
+            
+        case .equaled:
+            firstNum = doubleResult
+            doubleResult = operateByOpType(op: currentOp)
             
         default:
             break

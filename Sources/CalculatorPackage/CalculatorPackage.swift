@@ -8,7 +8,7 @@ public class CalculatorPackage<T: Inputable>: Calculable {
     
     var firstNum: Double = 0.0
     var secondNum: Double = 0.0
-    var currentOp: Operation = .none
+    var currentOp: OperationType = .none
 
     var tempOperation: [Any] = []
     
@@ -37,7 +37,7 @@ public class CalculatorPackage<T: Inputable>: Calculable {
 // MARK: 계산기 기능 메소드(사칙연산, =)
 extension CalculatorPackage {
     
-    public func makeCalculation(_ inputOp: Operation) {
+    public func makeCalculation(_ inputOp: OperationType) {
         // MARK: T의 Type이 선언되지 않아 T.Val이라는 연관타입으로 선언되어 타입캐스팅 불가
         // String으로 타입캐스팅 후 Double로 변환, 만약 String이 아닐 시 생각해보기
         // AssociatedType에 Double로 변환 가능하게 하는 프로토콜을 제약으로 채택하면??
@@ -88,7 +88,7 @@ extension CalculatorPackage {
                 if !tempOperation.isEmpty && (currentOp == .multiply || currentOp == .divide) {
                     let endIndex = tempOperation.index(before: tempOperation.endIndex)
                     guard let tempNum = tempOperation[tempOperation.startIndex] as? Double else { return }
-                    guard let tempOp = tempOperation[endIndex] as? Operation else { return }
+                    guard let tempOp = tempOperation[endIndex] as? OperationType else { return }
                     firstNum = tempNum
                     secondNum = num
                     doubleResult = operateByCase(op: tempOp)
@@ -166,7 +166,7 @@ extension CalculatorPackage {
     func operateTemp() {
             let endIndex = tempOperation.index(before: tempOperation.endIndex)
             guard let tempNum = tempOperation[tempOperation.startIndex] as? Double else { return }
-            guard let tempOp = tempOperation[endIndex] as? Operation else { return }
+            guard let tempOp = tempOperation[endIndex] as? OperationType else { return }
             
             firstNum = tempNum
             secondNum = doubleResult
@@ -175,7 +175,7 @@ extension CalculatorPackage {
     }
     
     
-    func operateByCase(op: Operation) -> Double {
+    func operateByCase(op: OperationType) -> Double {
         var result: Double = 0.0
         do {
             switch op {

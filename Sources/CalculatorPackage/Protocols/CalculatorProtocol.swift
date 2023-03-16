@@ -25,7 +25,7 @@ protocol Calculable: Adding, Substracting, Multiplying, Dividing {
     // 연산자, 피연산자, 임시 저장
     var firstNum: Double { get set }
     var secondNum: Double { get set}
-    var currentOp: Operation { get set }
+    var currentOp: OperationType { get set }
     var tempOperation: [Any] { get set }
 }
 

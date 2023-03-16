@@ -172,17 +172,21 @@ extension CalculatorPackage {
             }
             
         } catch CalculationError.dividedByZero {
+            result = Double.nan
             print("0으로 나눌 수 없습니다. result :", result)
-            doubleResult = Double.nan
+            return result
         } catch CalculationError.infiniteNumber {
+            result = Double.infinity
             print("수의 범위를 벗어났습니다. result :", result)
-            doubleResult = Double.infinity
+            return result
         } catch CalculationError.maxFractionDigits {
+            result = Double.nan
             print("소수점 자리수를 초과했습니다. result :", result)
-            doubleResult = Double.nan
+            return result
         } catch {
+            result = Double.nan
             print("그 밖의 에러 :", error)
-            doubleResult = Double.nan
+            return result
         }
         return result
     }

@@ -51,7 +51,7 @@ final class CalculatorPackageTests: XCTestCase {
         stringTest.makeCalculation(.multiply)
         stringTest.inputBox.addNum("5")
         stringTest.makeEqual()
-        XCTAssertEqual(stringTest.result, 632.0)
+        XCTAssertEqual(stringTest.doubleResult, 632.0)
         
         // doubleTest : 55+3*4+6.1*24+3 = 216.4
         
@@ -67,7 +67,7 @@ final class CalculatorPackageTests: XCTestCase {
         doubleTest.makeCalculation(.plus)
         doubleTest.inputBox.addNum(3)
         doubleTest.makeEqual()
-        XCTAssertEqual(doubleTest.result, 216.4)
+        XCTAssertEqual(doubleTest.doubleResult, 216.4)
     }
     
     // MARK: CalculatorPackage Class의 makeCalculation() 테스트 (연속 부호 O)
@@ -90,7 +90,8 @@ final class CalculatorPackageTests: XCTestCase {
         stringTest.inputBox.addNum("5")
         stringTest.makeEqual()
         
-        XCTAssertEqual(stringTest.result, 7.0)
+        XCTAssertEqual(stringTest.doubleResult, 7.0)
+        
         
         // doubleTest : 3***4++2--35-*+23.232 = 2.232
         
@@ -111,7 +112,7 @@ final class CalculatorPackageTests: XCTestCase {
         doubleTest.inputBox.addNum(23.232)
         doubleTest.makeEqual()
         
-        XCTAssertEqual(doubleTest.result, 2.232)
+        XCTAssertEqual(doubleTest.doubleResult, 2.232)
     }
     
     // MARK: CalculatorPackage Class의 makeEqual() 테스트
@@ -126,14 +127,14 @@ final class CalculatorPackageTests: XCTestCase {
         stringTest.makeCalculation(.plus)
         stringTest.makeEqual()
         stringTest.makeEqual()
-        XCTAssertEqual(stringTest.result, 3.0)
+        XCTAssertEqual(stringTest.doubleResult, 3.0)
         
         // stringTest 2
         stringTest.inputBox.addNum("1")
         stringTest.makeCalculation(.plus)
         stringTest.inputBox.addNum("2")
         stringTest.makeEqual()
-        XCTAssertEqual(stringTest.result, 3.0)
+        XCTAssertEqual(stringTest.doubleResult, 3.0)
         
         // stringTest 3
         stringTest.inputBox.addNum("1")
@@ -149,7 +150,7 @@ final class CalculatorPackageTests: XCTestCase {
         stringTest.makeCalculation(.minus)
         stringTest.makeCalculation(.plus)
         stringTest.makeEqual()
-        XCTAssertEqual(stringTest.result, 8.0)
+        XCTAssertEqual(stringTest.doubleResult, 8.0)
         
         // stringTest 4
         stringTest.inputBox.addNum("1")
@@ -158,7 +159,7 @@ final class CalculatorPackageTests: XCTestCase {
         stringTest.makeEqual()
         stringTest.makeEqual()
         stringTest.makeEqual()
-        XCTAssertEqual(stringTest.result, 10.0)
+        XCTAssertEqual(stringTest.doubleResult, 10.0)
         
         // doubleTest1 : 1.2+== -> result : 3.6
         // doubleTest2 : 2.4+4.8= -> result : 7.2
@@ -170,14 +171,14 @@ final class CalculatorPackageTests: XCTestCase {
         doubleTest.makeCalculation(.plus)
         doubleTest.makeEqual()
         doubleTest.makeEqual()
-        XCTAssertEqual(doubleTest.result, 3.6)
+        XCTAssertEqual(doubleTest.doubleResult, 3.6)
         
         // doubleTest 2
         doubleTest.inputBox.addNum(2.4)
         doubleTest.makeCalculation(.plus)
         doubleTest.inputBox.addNum(4.8)
         doubleTest.makeEqual()
-        XCTAssertEqual(doubleTest.result, 7.2)
+        XCTAssertEqual(doubleTest.doubleResult, 7.2)
         
         // doubleTest 3
         doubleTest.inputBox.addNum(2323.12151)
@@ -190,7 +191,7 @@ final class CalculatorPackageTests: XCTestCase {
         doubleTest.makeCalculation(.multiply)
         doubleTest.makeCalculation(.plus)
         doubleTest.makeEqual()
-        XCTAssertEqual(doubleTest.result, 4646.24302)
+        XCTAssertEqual(doubleTest.doubleResult, 4646.24302)
         
         // doubleTest 4
         doubleTest.inputBox.addNum(27.351)
@@ -199,7 +200,7 @@ final class CalculatorPackageTests: XCTestCase {
         doubleTest.makeEqual()
         doubleTest.makeEqual()
         doubleTest.makeEqual()
-        XCTAssertEqual(doubleTest.result, 1732.041)
+        XCTAssertEqual(doubleTest.doubleResult, 1732.041)
         
     }
 }

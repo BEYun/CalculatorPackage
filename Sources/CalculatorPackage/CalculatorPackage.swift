@@ -12,9 +12,20 @@ public class CalculatorPackage<T: Inputable>: Calculable {
 
     var tempOperation: [Any] = []
     
-    public var result: Double = 0.0 {
+    var doubleResult: Double = 0.0 {
         didSet {
-            result = round(result * 100000000) / 100000000
+            doubleResult = round(doubleResult * 100000000) / 100000000
+        }
+    }
+    
+    public var outputResult: String {
+        get {
+            if inputBox.state == .ready {
+                return inputBox.inputNum as? String ?? "0"
+            } else {
+                let num = doubleResult.truncatingRemainder(dividingBy: 1.0) == 0 ? String(Int(doubleResult)) : String(doubleResult)
+                return num
+            }
         }
     }
     
@@ -41,18 +52,18 @@ extension CalculatorPackage {
                 
             case .plus, .minus:
                 addTempOperation()
-                firstNum = result
+                firstNum = doubleResult
                 secondNum = num
-                result = operateByCase(op: currentOp)
+                doubleResult = operateByCase(op: currentOp)
 
                 if inputOp == .multiply || inputOp == .divide {
-                    result = secondNum
+                    doubleResult = secondNum
                 }
                 
             case .multiply, .divide:
-                firstNum = result
+                firstNum = doubleResult
                 secondNum = num
-                result = operateByCase(op: currentOp)
+                doubleResult = operateByCase(op: currentOp)
 
                 if !tempOperation.isEmpty && (inputOp == .plus || inputOp == .minus) {
                     operateTemp()
@@ -79,18 +90,18 @@ extension CalculatorPackage {
                     guard let tempOp = tempOperation[endIndex] as? Operation else { return }
                     firstNum = tempNum
                     secondNum = num
-                    result = operateByCase(op: tempOp)
+                    doubleResult = operateByCase(op: tempOp)
                 }
                 currentOp = inputOp
                 
             default:
-                result = num
+                doubleResult = num
                 currentOp = inputOp
             }
         
         // case .inital, .equaled : 초기 또는 연산 완료 (피연산자, 연산자 입력 X or 두 번째 피연산자 입력 X)
         default:
-            result = num
+            doubleResult = num
             currentOp = inputOp
             inputBox.state = .calculating
         }
@@ -101,9 +112,9 @@ extension CalculatorPackage {
         switch inputBox.state {
         case .ready, .equaled:
             let num: Double = makeNumToDouble()
-            firstNum = result
+            firstNum = doubleResult
             secondNum = num
-            result =  operateByCase(op: currentOp)
+            doubleResult =  operateByCase(op: currentOp)
             
             if !tempOperation.isEmpty && (currentOp == .multiply || currentOp == .divide) {
                 operateTemp()
@@ -112,9 +123,9 @@ extension CalculatorPackage {
             inputBox.state = .equaled
             
         case .calculating:
-            firstNum = result
-            secondNum = result
-            result = operateByCase(op: currentOp)
+            firstNum = doubleResult
+            secondNum = doubleResult
+            doubleResult = operateByCase(op: currentOp)
             inputBox.state = .equaled
             
         default:
@@ -142,10 +153,10 @@ extension CalculatorPackage {
     
     func addTempOperation() {
         if tempOperation.isEmpty {
-            tempOperation.append(result)
+            tempOperation.append(doubleResult)
             tempOperation.append(currentOp)
         } else {
-            tempOperation[tempOperation.startIndex] = result
+            tempOperation[tempOperation.startIndex] = doubleResult
             let endIndex = tempOperation.index(before: tempOperation.endIndex)
             tempOperation[endIndex] = currentOp
         }
@@ -157,9 +168,9 @@ extension CalculatorPackage {
             guard let tempOp = tempOperation[endIndex] as? Operation else { return }
             
             firstNum = tempNum
-            secondNum = result
+            secondNum = doubleResult
             
-            result = operateByCase(op: tempOp)
+            doubleResult = operateByCase(op: tempOp)
     }
     
     

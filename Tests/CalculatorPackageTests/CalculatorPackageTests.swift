@@ -203,4 +203,21 @@ final class CalculatorPackageTests: XCTestCase {
         XCTAssertEqual(doubleTest.doubleResult, 1732.041)
         
     }
+    
+    func testOutputResult() {
+        // test 123+456+*+= -> 123+(123) 456(456)+(579)*(456)+(579)=(1158)
+        stringTest.inputBox.addNum("1")
+        stringTest.inputBox.addNum("2")
+        stringTest.inputBox.addNum("3")
+        stringTest.makeCalculation(.plus)
+        stringTest.inputBox.addNum("4")
+        stringTest.inputBox.addNum("5")
+        stringTest.inputBox.addNum("6")
+        stringTest.makeCalculation(.plus)
+        stringTest.makeCalculation(.multiply)
+        stringTest.makeCalculation(.plus)
+        stringTest.makeEqual()
+        
+        XCTAssertEqual(stringTest.outputResult, "1158")
+    }
 }

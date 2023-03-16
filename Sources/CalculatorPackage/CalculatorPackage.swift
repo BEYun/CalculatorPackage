@@ -20,9 +20,10 @@ public class CalculatorPackage<T: Inputable>: Calculable {
     
     public var outputResult: String {
         get {
-            if inputBox.state == .ready {
+            switch inputBox.state {
+            case .initial, .ready:
                 return inputBox.inputNum as? String ?? "0"
-            } else {
+            case .calculating, .equaled:
                 let num = doubleResult.truncatingRemainder(dividingBy: 1.0) == 0 ? String(Int(doubleResult)) : String(doubleResult)
                 return num
             }

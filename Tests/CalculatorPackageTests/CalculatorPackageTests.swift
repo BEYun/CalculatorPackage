@@ -223,14 +223,7 @@ final class CalculatorPackageTests: XCTestCase {
     }
     
     func testError() throws {
-        stringTest.inputBox.addNum("3.0000001")
-        stringTest.makeCalculation(.multiply)
-        stringTest.inputBox.addNum("3.0000001")
-        stringTest.makeEqual()
-        stringTest.makeEqual()
-        stringTest.makeEqual()
-        stringTest.makeEqual()
-        print(stringTest.outputResult)
+        stringTest.inputBox.addNum("0")
         print(stringTest.outputResult)
     }
 }

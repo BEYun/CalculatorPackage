@@ -226,7 +226,7 @@ extension CalculatorPackage {
         
         switch num {
             
-        case .nMaxExponent ... .nMinExponent, .pMinExponent ... .pMaxExponent:
+        case 0, .nMaxExponent ... .nMinExponent, .pMinExponent ... .pMaxExponent:
             numberformatter.numberStyle = .decimal
             guard let str = numberformatter.string(for: num) else { return "0"}
             result = str

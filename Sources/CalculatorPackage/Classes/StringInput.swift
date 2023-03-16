@@ -38,6 +38,11 @@ public class StringInput: Inputable {
         
     }
     
+    public func clearNum() {
+        inputNum = "0"
+        state = .initial
+    }
+    
     required public init() {}
     
     deinit {

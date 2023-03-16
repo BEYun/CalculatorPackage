@@ -17,6 +17,8 @@ public protocol Inputable {
     
     func addNum(_ num: Val)
     
+    func clearNum()
+    
     init()
     
 }

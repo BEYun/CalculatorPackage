@@ -126,7 +126,7 @@ extension CalculatorPackage {
         secondNum = 0.0
         tempOperation = []
         doubleResult = 0.0
-        inputBox.state = .ready
+        inputBox.clearNum()
     }
     
 }

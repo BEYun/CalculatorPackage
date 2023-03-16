@@ -39,6 +39,11 @@ public class DoubleInput: Inputable {
 //            inputNum += num
 //        }
     }
+    
+    public func clearNum() {
+        inputNum = 0.0
+        state = .initial
+    }
 
     required public init() {}
     

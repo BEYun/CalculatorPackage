@@ -24,15 +24,10 @@ public class CalculatorPackage<T: Inputable>: Calculable {
     
 }
 
-// MARK: 계산기 기능 메소드(사칙연산, =)
+// MARK: 계산기 기능 메소드(사칙연산, =, AC)
 extension CalculatorPackage {
     
     public func makeCalculation(_ inputOp: OperationType) {
-        // MARK: T의 Type이 선언되지 않아 T.Val이라는 연관타입으로 선언되어 타입캐스팅 불가
-        // String으로 타입캐스팅 후 Double로 변환, 만약 String이 아닐 시 생각해보기
-        // AssociatedType에 Double로 변환 가능하게 하는 프로토콜을 제약으로 채택하면??
-        // Error 1) guard let str = Double(inputBox.currentNum) else { return } // T.Val 타입이 StringProtocol을 준수해야 함
-        // Error 2) guard let str = inputBox.currentNum as? Double else { return } // 타입캐스팅 오류
         
         let num: Double = makeNumToDouble()
         
@@ -40,7 +35,6 @@ extension CalculatorPackage {
         // case .ready : 계산 준비 완료(두 번째 피연산자 입력 O)
         case .ready:
             switch currentOp {
-                
             case .plus, .minus:
                 addTempOperation()
                 firstNum = doubleResult
@@ -50,7 +44,6 @@ extension CalculatorPackage {
                 if inputOp == .multiply || inputOp == .divide {
                     doubleResult = secondNum
                 }
-                
             case .multiply, .divide:
                 firstNum = doubleResult
                 secondNum = num
@@ -59,21 +52,17 @@ extension CalculatorPackage {
                 if !tempOperation.isEmpty && (inputOp == .plus || inputOp == .minus) {
                     operateTemp()
                 }
-                
             default:
                 break
             }
-            
             currentOp = inputOp
             inputBox.state = .calculating
         
         // case .calculating : 연산중 (두 번째 피연산자 입력 X)
         case .calculating:
             switch inputOp {
-                
             case currentOp:
                 return
-                
             case .plus, .minus:
                 if !tempOperation.isEmpty && (currentOp == .multiply || currentOp == .divide) {
                     let endIndex = tempOperation.index(before: tempOperation.endIndex)
@@ -84,7 +73,6 @@ extension CalculatorPackage {
                     doubleResult = operateByCase(op: tempOp)
                 }
                 currentOp = inputOp
-                
             default:
                 doubleResult = num
                 currentOp = inputOp
@@ -129,6 +117,8 @@ extension CalculatorPackage {
 // MARK: 기능 메소드 구현에 필요한 내부 메소드
 extension CalculatorPackage {
     
+    // T의 Type이 선언되지 않아 T.Val이라는 연관타입으로 선언되어 타입캐스팅 불가 -> Type.self로 메타 타입 값 비교
+    // 만약 T의 타입이 늘어난다면...?
     func makeNumToDouble() -> Double {
         var num: Double = 0.0
         
@@ -183,20 +173,16 @@ extension CalculatorPackage {
             
         } catch CalculationError.dividedByZero {
             print("0으로 나눌 수 없습니다. result :", result)
-            result = Double.nan
-            return result
+            doubleResult = Double.nan
         } catch CalculationError.infiniteNumber {
             print("수의 범위를 벗어났습니다. result :", result)
-            result = Double.infinity
-            return result
+            doubleResult = Double.infinity
         } catch CalculationError.maxFractionDigits {
             print("소수점 자리수를 초과했습니다. result :", result)
-            result = Double.nan
-            return result
+            doubleResult = Double.nan
         } catch {
             print("그 밖의 에러 :", error)
-            result = Double.nan
-            return result
+            doubleResult = Double.nan
         }
         return result
     }

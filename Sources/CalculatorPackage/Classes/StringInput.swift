@@ -25,13 +25,15 @@ public class StringInput: Inputable {
             state = .initial
         }
         
-        switch inputNum {
-        case "0":
-            inputNum = num
-        case "-0":
-            inputNum = "-" + num
-        default:
-            inputNum += num
+        if inputNum.count < 10 {
+            switch inputNum {
+            case "0":
+                inputNum = num
+            case "-0":
+                inputNum = "-" + num
+            default:
+                inputNum += num
+            }
         }
         
     }

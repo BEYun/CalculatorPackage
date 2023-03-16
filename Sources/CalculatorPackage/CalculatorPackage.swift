@@ -39,7 +39,7 @@ extension CalculatorPackage {
                 addTempOperation()
                 firstNum = doubleResult
                 secondNum = num
-                doubleResult = operateByCase(op: currentOp)
+                doubleResult = operateByOpType(op: currentOp)
 
                 if inputOp == .multiply || inputOp == .divide {
                     doubleResult = secondNum
@@ -47,10 +47,10 @@ extension CalculatorPackage {
             case .multiply, .divide:
                 firstNum = doubleResult
                 secondNum = num
-                doubleResult = operateByCase(op: currentOp)
+                doubleResult = operateByOpType(op: currentOp)
 
                 if !tempOperation.isEmpty && (inputOp == .plus || inputOp == .minus) {
-                    operateTemp()
+                    operateTempCase()
                 }
             default:
                 break
@@ -70,7 +70,7 @@ extension CalculatorPackage {
                     guard let tempOp = tempOperation[endIndex] as? OperationType else { return }
                     firstNum = tempNum
                     secondNum = num
-                    doubleResult = operateByCase(op: tempOp)
+                    doubleResult = operateByOpType(op: tempOp)
                 }
                 currentOp = inputOp
             default:
@@ -78,7 +78,13 @@ extension CalculatorPackage {
                 currentOp = inputOp
             }
         
-        // case .inital, .equaled : 초기 또는 연산 완료 (피연산자, 연산자 입력 X or 두 번째 피연산자 입력 X)
+        // case .equaled : 연산 완료 (두 번째 피연산자 입력 X)
+        case .equaled:
+            firstNum = doubleResult
+            currentOp = inputOp
+            inputBox.state = .calculating
+            
+        // case .inital : 초기 (피연산자, 연산자 입력 X)
         default:
             doubleResult = num
             currentOp = inputOp
@@ -93,23 +99,34 @@ extension CalculatorPackage {
             let num: Double = makeNumToDouble()
             firstNum = doubleResult
             secondNum = num
-            doubleResult =  operateByCase(op: currentOp)
-            
-            if !tempOperation.isEmpty && (currentOp == .multiply || currentOp == .divide) {
-                operateTemp()
-            }
+            doubleResult =  operateByOpType(op: currentOp)
             
             inputBox.state = .equaled
             
         case .calculating:
             firstNum = doubleResult
             secondNum = doubleResult
-            doubleResult = operateByCase(op: currentOp)
+            doubleResult = operateByOpType(op: currentOp)
+            
             inputBox.state = .equaled
             
         default:
             break
         }
+        
+        if !tempOperation.isEmpty && (currentOp == .multiply || currentOp == .divide) {
+            operateTempCase()
+        }
+        
+        tempOperation = []
+    }
+    
+    public func makeClear() {
+        firstNum = 0.0
+        secondNum = 0.0
+        tempOperation = []
+        doubleResult = 0.0
+        inputBox.state = .ready
     }
     
 }
@@ -143,7 +160,7 @@ extension CalculatorPackage {
         }
     }
     
-    func operateTemp() {
+    func operateTempCase() {
             let endIndex = tempOperation.index(before: tempOperation.endIndex)
             guard let tempNum = tempOperation[tempOperation.startIndex] as? Double else { return }
             guard let tempOp = tempOperation[endIndex] as? OperationType else { return }
@@ -151,11 +168,11 @@ extension CalculatorPackage {
             firstNum = tempNum
             secondNum = doubleResult
             
-            doubleResult = operateByCase(op: tempOp)
+            doubleResult = operateByOpType(op: tempOp)
     }
     
     
-    func operateByCase(op: OperationType) -> Double {
+    func operateByOpType(op: OperationType) -> Double {
         var result: Double = 0.0
         do {
             switch op {

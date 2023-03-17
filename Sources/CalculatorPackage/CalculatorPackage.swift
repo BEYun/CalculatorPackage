@@ -140,10 +140,16 @@ extension CalculatorPackage {
 extension CalculatorPackage {
     
     // T의 Type이 선언되지 않아 T.Val이라는 연관타입으로 선언되어 타입캐스팅 불가 -> Type.self로 메타 타입 값 비교
+    // if 문은 가능, switch 문은 오류 발생 !!
     // 만약 T의 타입이 늘어난다면...?
     func getNumToDouble() -> Double {
         var num: Double = 0.0
-        
+
+//        switch T.Val.self {
+//        case T.Val.self where T.Val.self == Double.self:
+//            num = inputBox.inputNum as? Double ?? 0.0
+//        }
+//
         if T.Val.self == Double.self {
             num = inputBox.inputNum as? Double ?? 0.0
         } else if T.Val.self == String.self {

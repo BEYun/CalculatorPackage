@@ -7,7 +7,7 @@ final class CalculatorPackageTests: XCTestCase {
     var doubleTest : CalculatorPackage<DoubleInput> = CalculatorPackage()
     
     // MARK: Input Class의 addNum() 테스트
-    func testAddNumber() throws {
+    func testAddNumberByStringInput() throws {
         // stringTest : -10.3000 입력
         
         stringTest.inputBox.addNum("-1")

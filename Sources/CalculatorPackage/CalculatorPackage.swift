@@ -29,7 +29,7 @@ extension CalculatorPackage {
     
     public func makeCalculation(_ inputOp: OperationType) {
         
-        let num: Double = makeNumToDouble()
+        let num: Double = getNumToDouble()
         
         switch inputBox.state {
         // case .ready : 계산 준비 완료(두 번째 피연산자 입력 O)
@@ -97,7 +97,7 @@ extension CalculatorPackage {
         
         switch inputBox.state {
         case .ready:
-            let num: Double = makeNumToDouble()
+            let num: Double = getNumToDouble()
             firstNum = doubleResult
             secondNum = num
             doubleResult =  operateByOpType(op: currentOp)
@@ -141,7 +141,7 @@ extension CalculatorPackage {
     
     // T의 Type이 선언되지 않아 T.Val이라는 연관타입으로 선언되어 타입캐스팅 불가 -> Type.self로 메타 타입 값 비교
     // 만약 T의 타입이 늘어난다면...?
-    func makeNumToDouble() -> Double {
+    func getNumToDouble() -> Double {
         var num: Double = 0.0
         
         if T.Val.self == Double.self {
